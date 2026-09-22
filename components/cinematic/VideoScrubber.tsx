@@ -17,15 +17,15 @@ export default function VideoScrubber({
 }) {
   const wrap = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  const scrollTriggerRef = useRef<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const el = video.current;
     const container = wrap.current;
     if (!el || !container) return;
-    const { gsap, ScrollTrigger } = getGSAP();
-    let tween: any;
 
+    const { gsap, ScrollTrigger } = getGSAP();
     const trigger = triggerRef?.current ?? container.parentElement ?? container;
 
     const onError = () => {
@@ -36,19 +36,21 @@ export default function VideoScrubber({
     };
 
     const setup = () => {
-      const duration = el.duration || 12;
-      tween = gsap.to(el, {
-        currentTime: duration,
-        ease: "none",
-        scrollTrigger: {
-          trigger,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 0.7,
-          invalidateOnRefresh: true,
-          onUpdate: (s) => onProgress(Math.min(1, Math.max(0, s.progress))),
+      if (!el.duration) return;
+
+      scrollTriggerRef.current = ScrollTrigger.create({
+        trigger,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (s) => {
+          const progress = Math.min(1, Math.max(0, s.progress));
+          onProgress(progress);
+          el.currentTime = progress * el.duration;
         },
       });
+
       onReady();
       ScrollTrigger.refresh();
     };
@@ -57,15 +59,11 @@ export default function VideoScrubber({
     if (el.readyState >= 1) setup();
     else el.addEventListener("loadedmetadata", setup);
 
-    const onWindowLoad = () => ScrollTrigger.refresh();
-    window.addEventListener("load", onWindowLoad);
-
     return () => {
       el.removeEventListener("error", onError);
       el.removeEventListener("loadedmetadata", setup);
-      window.removeEventListener("load", onWindowLoad);
-      tween?.scrollTrigger?.kill();
-      tween?.kill();
+      scrollTriggerRef.current?.kill();
+      gsap.ticker.lagSmoothing(0);
     };
   }, [onProgress, onReady, triggerRef]);
 
@@ -77,7 +75,7 @@ export default function VideoScrubber({
         poster={poster}
         muted
         playsInline
-        preload="auto"
+        preload="metadata"
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/55" />

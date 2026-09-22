@@ -3,10 +3,16 @@ import { useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
 import { getGSAP } from "@/lib/gsap";
 
-export default function LenisProvider() {
+export default function LenisProvider({
+  smoothWheel = false,
+  duration = 0.8,
+}: {
+  smoothWheel?: boolean;
+  duration?: number;
+}) {
   useEffect(() => {
     const { gsap, ScrollTrigger } = getGSAP();
-    const lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+    const lenis = new Lenis({ duration, smoothWheel, wheelMultiplier: 0.9 });
 
     lenis.on("scroll", ScrollTrigger.update);
 
@@ -14,7 +20,6 @@ export default function LenisProvider() {
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
-    // Ép tính lại chiều cao trigger sau khi layout ổn định
     const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 300);
 
     return () => {
@@ -22,7 +27,7 @@ export default function LenisProvider() {
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
     };
-  }, []);
+  }, [duration, smoothWheel]);
 
   return null;
 }

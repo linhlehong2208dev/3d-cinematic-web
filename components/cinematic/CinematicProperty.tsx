@@ -7,21 +7,25 @@ import VideoScrubber from "./VideoScrubber";
 import Header from "@/components/ui/Header";
 import LeadModal from "@/components/lead/LeadModal";
 import PropertySections from "@/components/property/PropertySections";
+
 export default function CinematicProperty() {
   const [p, setP] = useState(0);
   const [ready, setReady] = useState(false);
   const [lead, setLead] = useState(false);
   const cinematicSectionRef = useRef<HTMLDivElement>(null);
+
   const scene = useMemo(
     () =>
       PROPERTY.scenes.find((s) => p >= s.start && p <= s.end) ??
       PROPERTY.scenes[0],
     [p],
   );
+
   const onProgress = useCallback((v: number) => setP(v), []);
+
   return (
     <>
-      <LenisProvider />
+      <LenisProvider smoothWheel={false} duration={0.6} />
       <div
         ref={cinematicSectionRef}
         className="relative h-[700vh]"
