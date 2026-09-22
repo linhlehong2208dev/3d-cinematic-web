@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { getGSAP } from "@/lib/gsap";
 
 export default function VideoScrubber({
+  triggerRef,
   videoSrc,
   poster,
   onProgress,
   onReady,
 }: {
+  triggerRef?: React.RefObject<HTMLElement | null>;
   videoSrc: string;
   poster: string;
   onProgress: (p: number) => void;
@@ -18,16 +20,17 @@ export default function VideoScrubber({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const el = video.current,
-      container = wrap.current;
+    const el = video.current;
+    const container = wrap.current;
     if (!el || !container) return;
     const { gsap, ScrollTrigger } = getGSAP();
     let tween: any;
 
+    const trigger = triggerRef?.current ?? container.parentElement ?? container;
+
     const onError = () => {
-      const code = el.error?.code;
       setError(
-        `Video load failed (code ${code}). Kiểm tra xem file có phải Git LFS pointer chưa được resolve không.`,
+        `Video load failed (code ${el.error?.code}). Kiểm tra lại URL video.`,
       );
       console.error("[VideoScrubber] video error", el.error);
     };
@@ -38,28 +41,33 @@ export default function VideoScrubber({
         currentTime: duration,
         ease: "none",
         scrollTrigger: {
-          trigger: container,
+          trigger,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.45,
-          onUpdate: (s) => onProgress(s.progress),
+          scrub: 0.7,
+          invalidateOnRefresh: true,
+          onUpdate: (s) => onProgress(Math.min(1, Math.max(0, s.progress))),
         },
       });
       onReady();
+      ScrollTrigger.refresh();
     };
 
     el.addEventListener("error", onError);
     if (el.readyState >= 1) setup();
     else el.addEventListener("loadedmetadata", setup);
 
+    const onWindowLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", onWindowLoad);
+
     return () => {
       el.removeEventListener("error", onError);
       el.removeEventListener("loadedmetadata", setup);
+      window.removeEventListener("load", onWindowLoad);
       tween?.scrollTrigger?.kill();
       tween?.kill();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
-  }, [onProgress, onReady]);
+  }, [onProgress, onReady, triggerRef]);
 
   return (
     <div ref={wrap} className="absolute inset-0">

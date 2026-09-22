@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { MapPin, Phone, ChevronDown } from "lucide-react";
 import { PROPERTY } from "@/data/propertyData";
 import LenisProvider from "./LenisProvider";
@@ -11,6 +11,7 @@ export default function CinematicProperty() {
   const [p, setP] = useState(0);
   const [ready, setReady] = useState(false);
   const [lead, setLead] = useState(false);
+  const cinematicSectionRef = useRef<HTMLDivElement>(null);
   const scene = useMemo(
     () =>
       PROPERTY.scenes.find((s) => p >= s.start && p <= s.end) ??
@@ -21,9 +22,14 @@ export default function CinematicProperty() {
   return (
     <>
       <LenisProvider />
-      <div className="relative h-[700vh]">
+      <div
+        ref={cinematicSectionRef}
+        className="relative h-[700vh]"
+        data-cinematic-section
+      >
         <div className="sticky top-0 h-screen overflow-hidden">
           <VideoScrubber
+            triggerRef={cinematicSectionRef}
             videoSrc={PROPERTY.video}
             poster={PROPERTY.heroPoster}
             onProgress={onProgress}
