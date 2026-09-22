@@ -48,24 +48,5 @@ function RoomCard({ room }: { room: RoomVideo }) {
 }
 
 export default function VideoGallery() {
-  return (
-    <section id="rooms" className="bg-white px-6 py-24 md:px-12">
-      <div className="mx-auto max-w-7xl">
-        <p className="text-xs tracking-[.3em] text-amber-600">
-          KHÔNG GIAN CHI TIẾT
-        </p>
-        <h2 className="mt-4 text-4xl font-light text-zinc-900 md:text-6xl">
-          Từng góc nhìn,
-          <br />
-          từng không gian.
-        </h2>
-
-        <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {PROPERTY.rooms.map((room) => (
-            <RoomCard key={room.id} room={room} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  return null;
 }

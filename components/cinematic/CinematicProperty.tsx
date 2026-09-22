@@ -50,35 +50,10 @@ export default function CinematicProperty() {
           />
           <Header onLead={() => setLead(true)} />
 
-          <div className="relative z-20 flex h-full items-center px-6 md:px-14">
-            <div className="max-w-md pt-12">
+          <div className="absolute bottom-12 left-4 z-20 md:bottom-16 md:left-8">
+            <div className="pointer-events-none w-[220px] rounded-xl border border-white/10 bg-black/30 p-3 shadow-[0_10px_30px_rgba(0,0,0,0.18)] backdrop-blur-[1px] md:w-[240px]">
               <SceneInfoCard scene={scene} />
-
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <button
-                  onClick={() => setLead(true)}
-                  className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black"
-                >
-                  <Phone size={16} /> Private Viewing
-                </button>
-                <span className="hidden items-center text-xs text-white/50 md:flex">
-                  <MapPin size={14} className="mr-2" />
-                  {PROPERTY.location}
-                </span>
-              </div>
             </div>
-          </div>
-
-          <div className="absolute right-5 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-2 md:flex">
-            {PROPERTY.scenes.map((s) => (
-              <div
-                key={s.id}
-                title={s.title}
-                className={`h-1 rounded-full transition-all ${
-                  scene.id === s.id ? "w-10 bg-amber-400" : "w-2 bg-white/30"
-                }`}
-              />
-            ))}
           </div>
 
           <div className="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[.3em] text-white/40">
