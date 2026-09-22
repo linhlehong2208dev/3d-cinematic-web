@@ -27,7 +27,7 @@ export const PROPERTY: Property = {
   price: "$5,250,000",
   details: "6 Beds • 8 Baths • 8,500 Sq Ft",
   heroPoster: "/images/property-poster.svg",
-  video: "https://bucket.rever.io.vn/video-cinematic-optimized.mp4",
+  video: "https://bucket.rever.io.vn/video-cinematic-v2.mp4",
   specs: [
     { label: "Year Built", value: "2024" },
     { label: "Lot Size", value: "1.2 Acres" },
