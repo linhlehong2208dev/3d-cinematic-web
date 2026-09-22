@@ -5,7 +5,7 @@ export default function SceneInfoCard({ scene }: { scene: Scene }) {
   return (
     <div
       key={scene.id}
-      className="scene-info-card max-w-md rounded-2xl border border-white/15 bg-black/25 p-6 backdrop-blur-xl md:p-8"
+      className="scene-info-card max-w-md rounded-2xl border border-white/15 bg-black/45 p-6 md:p-8"
     >
       <p className="text-xs font-semibold tracking-[.3em] text-amber-300">
         {scene.eyebrow ?? scene.subtitle}
