@@ -27,7 +27,8 @@ export const PROPERTY: Property = {
   price: "$5,250,000",
   details: "6 Beds • 8 Baths • 8,500 Sq Ft",
   heroPoster: "/images/property-poster.svg",
-  video: "/videos/video-cinematic.mp4",
+  video:
+    "https://pub-f998296666e94bf3a605ea328df36f7b.r2.dev/video-cinematic.mp4",
   specs: [
     { label: "Year Built", value: "2024" },
     { label: "Lot Size", value: "1.2 Acres" },
