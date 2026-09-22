@@ -38,6 +38,9 @@ export default function VideoScrubber({
     const setup = () => {
       if (!el.duration) return;
 
+      el.currentTime = 0;
+      onProgress(0);
+
       scrollTriggerRef.current = ScrollTrigger.create({
         trigger,
         start: "top top",
@@ -75,7 +78,7 @@ export default function VideoScrubber({
         poster={poster}
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         className="absolute inset-0 h-full w-full object-cover"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/55" />
